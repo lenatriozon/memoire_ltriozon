@@ -1,3 +1,5 @@
+
+
 body {
     background-color: #FFFFF5;
     margin: 0;
@@ -8,13 +10,8 @@ body {
     padding: 1em;
 }
 
-table { border-collapse: collapse; width: 100%; }
-th { border: 2px solid #000000; padding: .4em .7em; vertical-align: top; }
-td { border: 2px solid #000000; padding: .4em .7em; vertical-align: middle; }
-th { background: #D2EAFD; text-align: center; }
-td { background: #FFFFFF}
-td.term-cell { text-align: center; font-style: italic; }
-                    
+/* Navigation */
+
 nav ul {
     display: flex;
     list-style: none;
@@ -37,6 +34,8 @@ nav ul li a:hover {
     text-decoration: underline;
 }                    
 
+/* Titres et sections */
+
 h1 {
     text-align:center
 }
@@ -46,10 +45,20 @@ section {
     unicode-bidi: isolate;
 }
 
+/* Tableau du lexique */
+
+table { border-collapse: collapse; width: 100%; }
+th { border: 2px solid #000000; padding: .4em .7em; vertical-align: top; }
+td { border: 2px solid #000000; padding: .4em .7em; vertical-align: middle; }
+th { background: #D2EAFD; text-align: center; }
+td { background: #FFFFFF}
+td.term-cell { text-align: center; font-style: italic; }
+              
+/* Affichage des pages */ 
 
 body.type h3,
 body.causes h3,
-body.role summary,
+body.role h3,
 body.lexique h3,
 body.consequence h3,
 body.procede h3{
@@ -66,12 +75,17 @@ body.procede h3{
     display: inline-block;
    }
    
-   body.role details {
+   body.role details,
+   body.type details,
+   body.causes details,
+   body.consequence details,
+   body.procede details{
     display: block;
     margin-bottom: 10px;
     cursor: pointer;
 }
-   
+  
+
 body.corpus h3{
      padding: 1px;
     background-color: #B1DDFC;
@@ -99,7 +113,9 @@ body.accueil h3{
     border-bottom-right-radius: 0%;
     margin:0;
 }
-    
+
+/* Containers de de mise en page */
+
 .container{
     display: flex;
     column-gap: 10px;
