@@ -94,7 +94,7 @@
             <xsl:element name="html">
                 <xsl:element name="head">
                     <xsl:element name="title">
-                        <xsl:text>L'aveuglement</xsl:text>
+                        <xsl:text>Le corpus</xsl:text>
                     </xsl:element>
                 </xsl:element>
 
@@ -235,6 +235,7 @@
                            
                             <xsl:element name="details">
                                 <xsl:element name="summary">
+                                    <xsl:element name="h3">
                                     <xsl:choose>
                                     <xsl:when test="current-grouping-key() = 'blinded'">
                                         <xsl:text>Personnages aveuglés</xsl:text>
@@ -269,7 +270,9 @@
                                     <xsl:when test="current-grouping-key() = 'captured'">
                                         <xsl:text>Victime d'enlèvement</xsl:text>
                                     </xsl:when>
+                                   
                                 </xsl:choose>
+                                    </xsl:element>
                             </xsl:element>
 
                             <!-- Liste des personnages du groupe -->
@@ -316,8 +319,17 @@
                                             <xsl:when test="@nymRef = 'Athena'">
                                                 <xsl:text>Athéna</xsl:text>
                                             </xsl:when>
+                                            <xsl:when test="@nymRef = 'Democritus'">
+                                                <xsl:text>Démocrite</xsl:text>
+                                            </xsl:when>
                                             <xsl:when test="@nymRef = 'Stesichorus'">
                                                 <xsl:text>Stésichore</xsl:text>
+                                            </xsl:when>
+                                            <xsl:when test="@nymRef = 'old_man'">
+                                                <xsl:text>Vieillard</xsl:text>
+                                            </xsl:when>
+                                            <xsl:when test="@nymRef = 'son'">
+                                                <xsl:text>Fils</xsl:text>
                                             </xsl:when>
                                             
                                             <xsl:otherwise>
@@ -399,6 +411,9 @@
                         <xsl:for-each-group select=".//tei:persName[@role]" group-by="@type">
                             <xsl:sort select="@type" order="ascending"/>
                             
+                            <xsl:element name="details">
+                                <xsl:element name="summary">
+                            
                             <xsl:element name="h3">
                                 <xsl:choose>
                                     <xsl:when test="current-grouping-key() = 'deities'">
@@ -421,7 +436,7 @@
                                     </xsl:when>
                                 </xsl:choose>
                             </xsl:element>
-
+                                </xsl:element>
                             <!-- Liste des personnages du groupe -->
                             <xsl:element name="ul">
 
@@ -441,6 +456,9 @@
                                             </xsl:when>
                                             <xsl:when test="@nymRef = 'Helen'">
                                                 <xsl:text>Hélène</xsl:text>
+                                            </xsl:when>
+                                            <xsl:when test="@nymRef = 'Achilles'">
+                                                <xsl:text>Achille</xsl:text>
                                             </xsl:when>
                                             <xsl:when test="@nymRef = 'Juno'">
                                                 <xsl:text>Junon</xsl:text>
@@ -469,10 +487,20 @@
                                             <xsl:when test="@nymRef = 'Oedipus'">
                                                 <xsl:text>Oedipe</xsl:text>
                                             </xsl:when>
+                                            <xsl:when test="@nymRef = 'Democritus'">
+                                                <xsl:text>Democrite</xsl:text>
+                                            </xsl:when>
+                                            <xsl:when test="@nymRef = 'old_man'">
+                                                <xsl:text>Vieillard</xsl:text>
+                                            </xsl:when>
+                                            <xsl:when test="@nymRef = 'son'">
+                                                <xsl:text>Fils</xsl:text>
+                                            </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:value-of select="@nymRef"/>
                                             </xsl:otherwise>
                                         </xsl:choose>
+                                        
                                         <xsl:element name="ul">
                                             <xsl:for-each select="current-group()">
                                                 <xsl:element name="li">
@@ -505,7 +533,7 @@
 
                                 </xsl:for-each-group>
                             </xsl:element>
-
+                            </xsl:element>
                         </xsl:for-each-group>
                     </xsl:element>
                 </xsl:element>
@@ -626,7 +654,8 @@
                             group-by="@subtype">
                             <xsl:sort select="@subtype" order="ascending"/>
 
-                           
+                            <xsl:element name="details">
+                                <xsl:element name="summary">
                             <xsl:element name="h3">
                                 <xsl:choose>
                                     <xsl:when test="current-grouping-key() = 'deities'">
@@ -644,20 +673,24 @@
                                     <xsl:when test="current-grouping-key() = 'birth_defect'">
                                         <xsl:text>Aveugle de naissance</xsl:text>
                                     </xsl:when>
-                                    <xsl:when test="current-grouping-key() = 'love_of_woman'">
-                                        <xsl:text>Venger une femme</xsl:text>
+                                    <xsl:when test="current-grouping-key() = 'adultery'">
+                                        <xsl:text>Adultère</xsl:text>
+                                    </xsl:when>
+                                    <xsl:when test="current-grouping-key() = 'philosophy'">
+                                        <xsl:text>Philosophie de vie</xsl:text>
                                     </xsl:when>
                                 </xsl:choose>
                             </xsl:element>
-
+                                </xsl:element>
+                            
                             <!-- Références -->
                             
                             <xsl:element name="ul">
-                                <xsl:for-each select="current-group()">
-                                <!--xsl:for-each-group select="current-group()" group-by="@nymRef">
-                                    <xsl:sort select="@nymRef" order="ascending"/>-->
+                               
+                                <xsl:for-each-group select="current-group()" group-by="concat(@corresp, '||', @nymRef)">
+                                    <xsl:sort select="@corresp" order="ascending"/>
+                                    
                                     <xsl:element name="li">
-                                        
                                         
                                         <xsl:choose>
                                             <xsl:when test="@corresp = 'stepmother'"><xsl:text>Belle-mère</xsl:text></xsl:when>
@@ -668,49 +701,52 @@
                                             <xsl:when test="@corresp = 'deities'"><xsl:text>Divinités</xsl:text></xsl:when>
                                             <xsl:when test="@corresp = 'Oedipus'"><xsl:text>Oedipe</xsl:text></xsl:when>
                                             <xsl:when test="@corresp = 'Phineus'"><xsl:text>Phinée</xsl:text></xsl:when>
-                                            <xsl:when test="@corresp = 'Homerus'"><xsl:text>Homère</xsl:text></xsl:when>
+                                            <xsl:when test="@corresp = 'Homer'"><xsl:text>Homère</xsl:text></xsl:when>
                                             <xsl:when test="@corresp = 'Achilles'"><xsl:text>Achille</xsl:text></xsl:when>
+                                            <xsl:when test="@corresp = 'Democritus'"><xsl:text>Démocrite</xsl:text></xsl:when>
                                             <xsl:otherwise><xsl:value-of select="@corresp"/></xsl:otherwise>
                                         </xsl:choose>
                                         <xsl:text> envers </xsl:text>
                                         
-                                            <xsl:choose>
-                                                <xsl:when test="@nymRef = 'Phineus_sons'"><xsl:text> les fils de Phinée</xsl:text></xsl:when>
-                                                <xsl:when test="@nymRef = 'Phineus'"><xsl:text>Phinée</xsl:text></xsl:when>
-                                                <xsl:when test="@nymRef = 'Stesichorus'"><xsl:text>Stésichore</xsl:text></xsl:when>
-                                                <xsl:when test="@nymRef = 'Tiresias'"><xsl:text>Tirésias</xsl:text></xsl:when> 
-                                                <xsl:when test="@nymRef = 'Oedipus'"><xsl:text>Oedipe</xsl:text></xsl:when>
-                                                <xsl:when test="@nymRef = 'Homerus'"><xsl:text>Homère</xsl:text></xsl:when>
-                                                <xsl:when test="@nymRef = 'Achilles'"><xsl:text>Achille</xsl:text></xsl:when>
-                                                <xsl:otherwise><xsl:value-of select="@nymRef"/></xsl:otherwise>
-                                            </xsl:choose>
-                                            
+                                        <xsl:choose>
+                                            <xsl:when test="@nymRef = 'Phineus_sons'"><xsl:text> les fils de Phinée</xsl:text></xsl:when>
+                                            <xsl:when test="@nymRef = 'Phineus'"><xsl:text>Phinée</xsl:text></xsl:when>
+                                            <xsl:when test="@nymRef = 'Stesichorus'"><xsl:text>Stésichore</xsl:text></xsl:when>
+                                            <xsl:when test="@nymRef = 'Tiresias'"><xsl:text>Tirésias</xsl:text></xsl:when>
+                                            <xsl:when test="@nymRef = 'Oedipus'"><xsl:text>Oedipe</xsl:text></xsl:when>
+                                            <xsl:when test="@nymRef = 'Homer'"><xsl:text>Homère</xsl:text></xsl:when>
+                                            <xsl:when test="@nymRef = 'Achilles'"><xsl:text>Achille</xsl:text></xsl:when>
+                                            <xsl:when test="@corresp = 'Democritus'"><xsl:text>Démocrite</xsl:text></xsl:when>
+                                            <xsl:otherwise><xsl:value-of select="@nymRef"/></xsl:otherwise>
+                                        </xsl:choose>
                                         
-                                        <!-- Référence bibliographique avec puce et indentation -->
+                                       
                                         <xsl:element name="ul">
-                                            <xsl:element name="li">
-                                                <xsl:element name="small">
-                                                    <xsl:element name="a">
-                                                        <xsl:attribute name="href">
-                                                            <xsl:text>Le corpus.html#</xsl:text>
-                                                            <xsl:value-of select="ancestor::tei:TEI/@xml:id"/>
-                                                        </xsl:attribute>
-                                                        <xsl:value-of select="ancestor::tei:TEI//tei:titleStmt/tei:author"/>
-                                                        <xsl:text>, </xsl:text>
-                                                        <xsl:element name="i">
-                                                            <xsl:value-of select="ancestor::tei:TEI//tei:titleStmt/tei:title"/>
+                                            <xsl:for-each select="current-group()">
+                                                <xsl:element name="li">
+                                                    <xsl:element name="small">
+                                                        <xsl:element name="a">
+                                                            <xsl:attribute name="href">
+                                                                <xsl:text>Le corpus.html#</xsl:text>
+                                                                <xsl:value-of select="ancestor::tei:TEI/@xml:id"/>
+                                                            </xsl:attribute>
+                                                            <xsl:value-of select="ancestor::tei:TEI//tei:titleStmt/tei:author"/>
+                                                            <xsl:text>, </xsl:text>
+                                                            <xsl:element name="i">
+                                                                <xsl:value-of select="ancestor::tei:TEI//tei:titleStmt/tei:title"/>
+                                                            </xsl:element>
+                                                            <xsl:text>, </xsl:text>
+                                                            <xsl:value-of select="ancestor::tei:TEI//tei:sourceDesc//tei:biblScope"/>
                                                         </xsl:element>
-                                                        <xsl:text>, </xsl:text>
-                                                        <xsl:value-of select="ancestor::tei:TEI//tei:sourceDesc//tei:biblScope"/>
                                                     </xsl:element>
                                                 </xsl:element>
-                                            </xsl:element>
+                                            </xsl:for-each>
                                         </xsl:element>
                                         
                                     </xsl:element>
-                                </xsl:for-each>
+                                </xsl:for-each-group>
                             </xsl:element>
-                            
+                            </xsl:element>
                         </xsl:for-each-group>
                     </xsl:element>
                 </xsl:element>
@@ -753,7 +789,8 @@
                             <xsl:sort select="@subtype" order="ascending"/>
                             
                             
-                            
+                            <xsl:element name="details">
+                                <xsl:element name="summary">
                             <xsl:element name="h3">
                                 <xsl:choose>
                                     <xsl:when test="current-grouping-key() = 'forget_practice'">
@@ -771,9 +808,13 @@
                                     <xsl:when test="current-grouping-key() = 'poetry'">
                                         <xsl:text>Don de poésie</xsl:text>
                                     </xsl:when>
+                                    <xsl:when test="current-grouping-key() = 'walled-up'">
+                                        <xsl:text>Emmurement</xsl:text>
+                                    </xsl:when>
                                 </xsl:choose>
                             </xsl:element>
-                            
+                                </xsl:element>
+                                
                             <xsl:element name="ul">
                                 <xsl:for-each-group select="current-group()" group-by="@corresp">
                                     <xsl:sort select="@corresp" order="ascending"/>
@@ -783,8 +824,14 @@
                                             <xsl:when test="@corresp = 'Phineus'">
                                                 <xsl:text>Phinée</xsl:text>
                                             </xsl:when>
-                                            <xsl:when test="@corresp = 'Homerus'">
+                                            <xsl:when test="@corresp = 'Homer'">
                                                 <xsl:text>Homère</xsl:text>
+                                            </xsl:when>
+                                            <xsl:when test="@corresp = 'old_man'">
+                                                <xsl:text>Vieillard</xsl:text>
+                                            </xsl:when>
+                                            <xsl:when test="@corresp = 'son'">
+                                                <xsl:text>Fils</xsl:text>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:value-of select="@corresp"/>
@@ -822,7 +869,7 @@
                                     </xsl:element>
                                 </xsl:for-each-group>
                             </xsl:element>
-                            
+                            </xsl:element>
                         </xsl:for-each-group>
                     </xsl:element>
                 </xsl:element>
@@ -865,7 +912,8 @@
                             group-by="@subtype">
                             <xsl:sort select="@subtype" order="ascending"/>
                             
-                            
+                            <xsl:element name="details">
+                                <xsl:element name="summary">
                             <xsl:element name="h3">
                                 <xsl:choose>
                                     <xsl:when test="current-grouping-key() = 'hands'">
@@ -878,12 +926,16 @@
                                     <xsl:when test="current-grouping-key() = 'read_future'">
                                         <xsl:text>Voir l'avenir</xsl:text>
                                     </xsl:when>
+                                    <xsl:when test="current-grouping-key() = 'light-blindness'">
+                                        <xsl:text>Lumière</xsl:text>
+                                    </xsl:when>
                                     <xsl:otherwise>
                                         <xsl:value-of select="@subtype"/>
                                     </xsl:otherwise>
                                 </xsl:choose>
                             </xsl:element>
-                            
+                                </xsl:element>
+                                
                             <xsl:element name="ul">
                                 <xsl:for-each-group select="current-group()" group-by="@corresp">
                                     <xsl:sort select="@corresp" order="ascending"/>
@@ -896,8 +948,14 @@
                                             <xsl:when test="@corresp = 'stepmother'">
                                                 <xsl:text>Belle-mère</xsl:text>
                                             </xsl:when>
+                                            <xsl:when test="@corresp = 'Democritus'">
+                                                <xsl:text>Démocrite</xsl:text>
+                                            </xsl:when>
                                             <xsl:when test="@corresp = 'Oedipus'">
                                                 <xsl:text>Oedipe</xsl:text>
+                                            </xsl:when>
+                                            <xsl:when test="@corresp = 'Tiresias'">
+                                                <xsl:text>Tirésias</xsl:text>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:value-of select="@corresp"/>
@@ -935,7 +993,7 @@
                                     </xsl:element>
                                 </xsl:for-each-group>
                             </xsl:element>
-                            
+                            </xsl:element>
                         </xsl:for-each-group>
                     </xsl:element>
                 </xsl:element>
@@ -1045,13 +1103,29 @@
                     <xsl:value-of select="normalize-space(.)"/>
                 </xsl:element>
                 <xsl:element name="td">
-                    <xsl:value-of select="@pos"/>
+                    <xsl:choose>
+                        <xsl:when test="@pos = 'noun'">nom</xsl:when>
+                        <xsl:when test="@pos = 'verb'">verbe</xsl:when>
+                        <xsl:when test="@pos = 'adj'">adjectif</xsl:when>
+                        <xsl:when test="@pos = 'part'">participe</xsl:when>
+                        </xsl:choose>
                 </xsl:element>
                 <xsl:element name="td">
                     <xsl:value-of select="@ana"/>
                 </xsl:element>
                 <xsl:element name="td">
-                    <xsl:value-of select="@corresp"/>
+                    <xsl:choose>
+                        <xsl:when test="@corresp = 'Democritus'">Démocrite</xsl:when>
+                        <xsl:when test="@corresp = 'Tiresias'">Tirésias</xsl:when>
+                        <xsl:when test="@corresp = 'Stesichorus'">Stésichore</xsl:when>
+                        <xsl:when test="@corresp = 'Phineus_sons'">Fils de Phinée</xsl:when>
+                        <xsl:when test="@corresp = 'Oedipus'">Oedipe</xsl:when>
+                        <xsl:when test="@corresp = 'Phineus'">Phinée</xsl:when>
+                        <xsl:when test="@corresp = 'Homer'">Homère</xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="@corresp"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:element>
                 <xsl:element name="td">
                     <xsl:element name="a">
@@ -1069,7 +1143,7 @@
                         </xsl:element>
                         <xsl:text>, </xsl:text>
                         <xsl:value-of select="ancestor::tei:TEI//tei:sourceDesc//tei:biblScope"/>
-                        <!-- <xsl:value-of select="../preceding-sibling::tei:lb[1]/@n"/>-->
+                        
                     </xsl:element>
                 </xsl:element>
             </xsl:element>
