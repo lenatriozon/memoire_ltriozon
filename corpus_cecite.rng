@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Schéma RelaxNG pour le corpus TEI "cécité punitive"
+  (fichiers Eur_Phen_*.xml, DioSic_BiblHist_*.xml, etc.)
+
+  Ce schéma décrit un sous-ensemble personnalisé de TEI :
+  - un en-tête bibliographique minimal (teiHeader)
+  - un texte source en grec (div type="text") avec balisage
+    linguistique (w, term) et sémantique (rs, persName)
+  - une traduction française (div type="translation")
+
+  Valeurs contrôlées observées dans le corpus (à titre indicatif,
+  non imposées comme liste fermée pour rester extensible) :
+    rs/@type      : cause_of_blindness, process
+    rs/@subtype   : punishment, agrafe
+    persName/@type: human_man, deities
+    persName/@role: blinded, actor_of_blindness
+    w/@pos        : noun, adj, verb
+    w/@ana        : pl_acc, sg_acc, pres_p3, pl_nom, pl_gen, aor_P1
+    w/@lemma, w/@type : renvoient à un identifiant préfixé par "#"
+-->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+         ns="http://www.tei-c.org/ns/1.0">
+
+  <start>
+    <ref name="TEI"/>
+  </start>
+
+  <!-- ============ RACINE ============ -->
+  <define name="TEI">
+    <element name="TEI">
+      <attribute name="xml:id"/>
+      <attribute name="xml:lang">
+        <data type="token"/>
+      </attribute>
+      <ref name="teiHeader"/>
+      <ref name="text"/>
+    </element>
+  </define>
+
+  <!-- ============ EN-TETE ============ -->
+  <define name="teiHeader">
+    <element name="teiHeader">
+      <element name="fileDesc">
+        <element name="titleStmt">
+          <element name="title"><text/></element>
+          <element name="author"><text/></element>
+        </element>
+        <element name="publicationStmt">
+          <element name="p"><text/></element>
+        </element>
+        <element name="sourceDesc">
+          <element name="bibl">
+            <element name="title"><text/></element>
+            <oneOrMore>
+              <element name="editor"><text/></element>
+            </oneOrMore>
+            <element name="date">
+              <attribute name="type">
+                <value>edition</value>
+              </attribute>
+              <text/>
+            </element>
+            <element name="biblScope"><text/></element>
+            <element name="publisher">
+              <element name="orgName"><text/></element>
+            </element>
+            <element name="pubPlace"><text/></element>
+          </element>
+        </element>
+      </element>
+    </element>
+  </define>
+
+  <!-- ============ CORPS DU TEXTE ============ -->
+  <define name="text">
+    <element name="text">
+      <element name="body">
+        <ref name="div.text"/>
+        <ref name="div.translation"/>
+      </element>
+    </element>
+  </define>
+
+  <!-- Division contenant le texte grec annoté -->
+  <define name="div.text">
+    <element name="div">
+      <attribute name="type">
+        <value>text</value>
+      </attribute>
+      <oneOrMore>
+        <element name="p">
+          <ref name="p.text.model"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <!-- Division contenant la traduction française -->
+  <define name="div.translation">
+    <element name="div">
+      <attribute name="type">
+        <value>translation</value>
+      </attribute>
+      <element name="p">
+        <text/>
+      </element>
+    </element>
+  </define>
+
+  <!-- ============ MODELE MIXTE DU <p> SOURCE ============ -->
+  <define name="p.text.model">
+    <mixed>
+      <zeroOrMore>
+        <choice>
+          <ref name="rs"/>
+          <ref name="lb"/>
+          <ref name="term"/>
+          <ref name="persName"/>
+          <ref name="w"/>
+        </choice>
+      </zeroOrMore>
+    </mixed>
+  </define>
+
+  <!-- <rs> : segment porteur d'un rôle sémantique (cause, agent...) -->
+  <define name="rs">
+    <element name="rs">
+      <attribute name="type">
+        <data type="token"/>
+      </attribute>
+      <optional>
+        <attribute name="subtype">
+          <data type="token"/>
+        </attribute>
+      </optional>
+      <attribute name="corresp">
+        <data type="token"/>
+      </attribute>
+      <optional>
+        <attribute name="nymRef">
+          <data type="token"/>
+        </attribute>
+      </optional>
+      <mixed>
+        <zeroOrMore>
+          <choice>
+            <ref name="persName"/>
+            <ref name="w"/>
+          </choice>
+        </zeroOrMore>
+      </mixed>
+    </element>
+  </define>
+
+  <!-- <persName> : personnage/entité nommé(e) -->
+  <define name="persName">
+    <element name="persName">
+      <attribute name="type">
+        <data type="token"/>
+      </attribute>
+      <optional>
+        <attribute name="role">
+          <data type="token"/>
+        </attribute>
+      </optional>
+      <attribute name="nymRef">
+        <data type="token"/>
+      </attribute>
+      <attribute name="corresp">
+        <data type="token"/>
+      </attribute>
+      <text/>
+    </element>
+  </define>
+
+  <!-- <term> : groupement de mots analysés morphologiquement -->
+  <define name="term">
+    <element name="term">
+      <mixed>
+        <zeroOrMore>
+          <ref name="w"/>
+        </zeroOrMore>
+      </mixed>
+    </element>
+  </define>
+
+  <!-- <w> : mot annoté (morphologie / lemme) -->
+  <define name="w">
+    <element name="w">
+      <attribute name="pos">
+        <data type="token"/>
+      </attribute>
+      <attribute name="ana">
+        <data type="token"/>
+      </attribute>
+      <attribute name="lemma">
+        <data type="token"/>
+      </attribute>
+      <attribute name="type">
+        <data type="token"/>
+      </attribute>
+      <optional>
+        <attribute name="corresp">
+          <data type="token"/>
+        </attribute>
+      </optional>
+      <text/>
+    </element>
+  </define>
+
+  <!-- <lb> : saut de ligne / numéro de vers -->
+  <define name="lb">
+    <element name="lb">
+      <attribute name="n">
+        <data type="token"/>
+      </attribute>
+      <empty/>
+    </element>
+  </define>
+
+</grammar>
